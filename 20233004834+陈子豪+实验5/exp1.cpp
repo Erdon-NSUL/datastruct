@@ -27,18 +27,16 @@ void CreateBiTree(BiTree *bt)
 	}
 }
 void  PreOrder(BiTree root) 
-/*先序遍历二叉树, root为指向二叉树根结点的指针*/
 {
 	if (root!=NULL)
 	{
-		printf("%c  ",root ->data);  /*输出结点*/
-		PreOrder(root ->LChild);  /*先序遍历左子树*/
-		PreOrder(root ->RChild);  /*先序遍历右子树*/
+		printf("%c  ",root ->data);  
+		PreOrder(root ->LChild);  
+		PreOrder(root ->RChild);  
 	}
 }
 
 void  InOrder(BiTree root)  
-/*中序遍历二叉树, root为指向二叉树(或某一子树)根结点的指针*/
 {
 	if(root->LChild != NULL){
 		InOrder(root->LChild);
@@ -50,7 +48,6 @@ void  InOrder(BiTree root)
 }
 
 void  PostOrder(BiTree root)  
-/* 后序遍历二叉树，root为指向二叉树(或某一子树)根结点的指针*/
 {
 	if (root->LChild != NULL){
 		PostOrder(root->LChild);
@@ -83,16 +80,21 @@ void  Pre_Count(BiTree root,int &cnt)
 }
 
 void Count_leaves(BiTree root,int &cnt){
-	if(root->LChild == NULL && root->RChild == NULL){
-		cnt += 1;
-	}else if(root != NULL){
-		Count_leaves(root->LChild,cnt);
-		Count_leaves(root->RChild,cnt);
+	if(root == NULL)return;
+		if (root->LChild  == NULL && root->RChild == NULL)
+		{
+			cnt++;	
+			return;
+		}else{
+			Count_leaves(root ->LChild,cnt);  
+			Count_leaves(root ->RChild,cnt);  
+		}
+		
 	}
-}
 
 int main()
 {
+	//ABC##DE#G##F###
 	BiTree T;
 	int layer=0,cnt = 0,cnt_2 = 0;
 	printf("按扩展先序遍历序列建立二叉树，请输入序列:\n");

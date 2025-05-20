@@ -5,54 +5,79 @@ typedef struct node{
 	bool tag;
 	char value;
 	node *subh,*nxt;
-	node(char v): tag(1),value(v),subh(nullptr),nxt(nullptr){}
-	node(node* p): tag(0),value('\0'),subh(p),nxt(nullptr){}
+	node(char v): tag(true),value(v),subh(nullptr),nxt(nullptr){}
+	node(): tag(false),value('\0'),subh(nullptr),nxt(nullptr){}
 }Node,*PNODE;
 
-PNODE create(PNODE l,string D,int &index){
+void create(PNODE &l,const string &D,int &index){
 	while(index < D.size()){
-		if(isspace(D[index]) || D[index] == ','){
+		if(isspace(D[index])){
 			cout<<"space: "<<index<<endl;
 			index++;
 			continue;
 		}
 			if(D[index]== '('){
-				cout<<index<<endl;
-				l->tag = true;
-				PNODE p = new(nothrow) Node;
-				l->subh = p;
+				l = new(nothrow) Node;
 				index++;
-				cout<<"++: "<<index<<endl;
-				p = create(p,D,index);
+				create(l->subh,D,index);
+				if (index < D.size() && D[index] == ')') {
+				    index++; // 跳过')'
+				}
+				if (index < D.size() && D[index] == ',') {
+				    index++; // 跳过','
+				    PNODE p = new(nothrow) Node();
+				    l->nxt = p;
+				    l = p;
+				}
 			}
 			else if( D[index]==')'){
-				cout<<index<<endl;
 				index++;
-				cout<<"++: "<<index<<endl;
-				return l;
+				return;
+			}
+			else if(D[index] == ','){
+				index++;
+				PNODE p = new(nothrow) Node();
+				l->nxt = p;
+				l = p;
 			}
 			else{
-				cout<<index<<endl;
-				l->tag = false;
-				cout<<index<<endl;
+				l = new(nothrow) Node(D[index]);
 				l->value = D[index];
-				cout<<index<<endl;
-				l->subh = nullptr;
-				cout<<index<<endl;
-				PNODE p = new(nothrow) Node;//构建下一个节点
-				l->nxt = p;
 				index++;
-				cout<<"++: "<<index<<endl;
-				p = create(p,D,index);
+				if (index < D.size() && (D[index] == ',' || D[index] == ')')) {
+					PNODE p = new(nothrow) Node();
+					l->nxt = p;
+				    l = p;
+				}
 			}
 		}
 	}
+	
+void print(PNODE l){
+	if(!l) cout << -1 ; return;
+	if(l->tag){
+		cout <<l->value;
+	}else{
+		cout << "(";
+		PNODE p =l->subh;
+		while(p){
+			print(p);
+			p = p->nxt;
+			if(p) cout <<",";
+		}
+		cout << ")";
+	}
+}
 
+//(a,b,(c,d),e)
 int main(){
+	cout << "输入广义表: "<<endl;
 	string input;
 	getline(cin,input);
 	int index = 0;
-	PNODE p;
-	p = create(p,input,index);
+	PNODE p = new(nothrow) Node();
+	create(p->subh,input,index);
+	cout << "打印：";
+	print(p->subh);
 	return 0;
 }
